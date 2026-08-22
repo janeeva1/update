@@ -420,7 +420,7 @@ const UpdatedInfoPage: React.FC = () => {
                     )}
                     {studentInfo?.jamb_no && (
                       <div>
-                        <label className="text-sm font-medium text-muted-foreground">JAMB Number</label>
+                        <label className="text-sm font-medium text-muted-foreground">JAMB Reg Number</label>
                         <p className="font-medium">{studentInfo?.jamb_no}</p>
                       </div>
                     )}

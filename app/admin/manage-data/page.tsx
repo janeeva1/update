@@ -717,7 +717,7 @@ export default function ManageDataPage() {
                     <input className={inputCls} placeholder="e.g. B.Sc Computer Science" value={addForm.course_study} onChange={e => setAddForm({...addForm, course_study: e.target.value})} />
                   </div>
                   <div>
-                    <label className={labelCls}>JAMB Number</label>
+                    <label className={labelCls}>JAMB Reg Number</label>
                     <input className={inputCls} placeholder="e.g. 12345678AB" value={addForm.jamb_no} onChange={e => setAddForm({...addForm, jamb_no: e.target.value})} />
                   </div>
                   <div>
