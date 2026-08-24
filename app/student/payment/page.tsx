@@ -233,14 +233,14 @@ const PaymentPage: React.FC = () => {
                           Please complete the data confirmation process before proceeding to payment.
                         </AlertDescription>
                       </Alert>
-                      <div className="flex gap-4">
-                        <Link href="/student/confirm">
-                          <Button>
+                      <div className="flex flex-col sm:flex-row gap-4">
+                        <Link href="/student/confirm" className="w-full sm:w-auto">
+                          <Button className="w-full sm:w-auto">
                             Confirm Data First
                           </Button>
                         </Link>
-                        <Link href="/student">
-                          <Button variant="outline">
+                        <Link href="/student" className="w-full sm:w-auto">
+                          <Button variant="outline" className="w-full sm:w-auto">
                             <ArrowLeft className="mr-2 h-4 w-4" />
                             Back to Dashboard
                           </Button>
@@ -318,29 +318,29 @@ const PaymentPage: React.FC = () => {
                           <span className="font-semibold text-green-800">Payment Receipt</span>
                         </div>
                         <div className="space-y-2 text-sm">
-                          <div className="grid grid-cols-2 gap-2">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                             <span className="text-green-700 font-medium">Student Name:</span>
                             <span className="text-green-800">{studentDetails?.student?.fname} {studentDetails?.student?.lname}</span>
                           </div>
-                          <div className="grid grid-cols-2 gap-2">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                             <span className="text-green-700 font-medium">Matric Number:</span>
                             <span className="text-green-800">{studentDetails?.student?.matric_no}</span>
                           </div>
-                          <div className="grid grid-cols-2 gap-2">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                             <span className="text-green-700 font-medium">Username:</span>
                             <span className="text-green-800">{studentDetails?.student?.username}</span>
                           </div>
-                          <div className="grid grid-cols-2 gap-2">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                             <span className="text-green-700 font-medium">Amount Paid:</span>
                             <span className="text-green-800 font-semibold">{formatCurrency(studentDetails?.payment_amount || 0)}</span>
                           </div>
                           {paymentReference && (
-                            <div className="grid grid-cols-2 gap-2">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                               <span className="text-green-700 font-medium">Reference:</span>
                               <span className="text-green-800 font-mono text-xs">{paymentReference}</span>
                             </div>
                           )}
-                          <div className="grid grid-cols-2 gap-2">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                             <span className="text-green-700 font-medium">Date:</span>
                             <span className="text-green-800">{new Date().toLocaleDateString()}</span>
                           </div>
@@ -516,8 +516,8 @@ const PaymentPage: React.FC = () => {
                         Enter it below to verify your payment.
                       </AlertDescription>
                     </Alert>
-                    <div className="flex gap-3">
-                      <div className="relative flex-1">
+                    <div className="flex flex-col sm:flex-row gap-3">
+                      <div className="relative flex-1 w-full">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-amber-500" />
                         <Input
                           placeholder="Enter payment reference (e.g. VUST-xxxxxxxxxx)"
@@ -530,7 +530,7 @@ const PaymentPage: React.FC = () => {
                       <Button
                         onClick={handleManualVerify}
                         disabled={isManualVerifying || !manualReference.trim()}
-                        className="bg-amber-600 hover:bg-amber-700 text-white"
+                        className="bg-amber-600 hover:bg-amber-700 text-white w-full sm:w-auto"
                       >
                         {isManualVerifying ? (
                           <>

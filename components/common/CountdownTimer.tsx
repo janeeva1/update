@@ -90,21 +90,21 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({
 
         {/* Countdown Display */}
         {!isLate ? (
-          <div className="grid grid-cols-4 gap-2 text-center">
-            <div className="p-2 rounded bg-background border">
-              <div className="text-lg font-bold">{timeLeft.days}</div>
+          <div className="grid grid-cols-4 gap-1.5 sm:gap-2 text-center">
+            <div className="p-1.5 sm:p-2 rounded bg-background border">
+              <div className="text-base sm:text-lg font-bold">{timeLeft.days}</div>
               <div className="text-xs text-muted-foreground">Days</div>
             </div>
-            <div className="p-2 rounded bg-background border">
-              <div className="text-lg font-bold">{timeLeft.hours}</div>
+            <div className="p-1.5 sm:p-2 rounded bg-background border">
+              <div className="text-base sm:text-lg font-bold">{timeLeft.hours}</div>
               <div className="text-xs text-muted-foreground">Hours</div>
             </div>
-            <div className="p-2 rounded bg-background border">
-              <div className="text-lg font-bold">{timeLeft.minutes}</div>
+            <div className="p-1.5 sm:p-2 rounded bg-background border">
+              <div className="text-base sm:text-lg font-bold">{timeLeft.minutes}</div>
               <div className="text-xs text-muted-foreground">Minutes</div>
             </div>
-            <div className="p-2 rounded bg-background border">
-              <div className="text-lg font-bold">{timeLeft.seconds}</div>
+            <div className="p-1.5 sm:p-2 rounded bg-background border">
+              <div className="text-base sm:text-lg font-bold">{timeLeft.seconds}</div>
               <div className="text-xs text-muted-foreground">Seconds</div>
             </div>
           </div>

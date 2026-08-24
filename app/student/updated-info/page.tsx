@@ -215,12 +215,12 @@ const UpdatedInfoPage: React.FC = () => {
               <Alert className="mb-6">
                 <CheckCircle className="h-4 w-4" />
                 <AlertDescription>
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                     <span>
                       Your student details update has been successfully submitted and 
                       {studentInfo?.is_paid ? ' payment completed' : ' payment is pending'}.
                     </span>
-                    <div className="flex space-x-2">
+                    <div className="flex flex-wrap gap-2">
                       <Badge className={studentInfo?.is_submitted ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}>
                         {studentInfo?.is_submitted ? 'Submitted' : 'Pending'}
                       </Badge>
@@ -312,19 +312,19 @@ const UpdatedInfoPage: React.FC = () => {
                       )}
                       <div className="md:col-span-2">
                         <label className="text-sm font-medium text-muted-foreground">NIN</label>
-                        <div className="flex items-center gap-2 mt-1">
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 mt-1">
                           <Input
                             value={ninValue}
                             onChange={(e) => setNinValue(e.target.value.replace(/[^\d]/g, '').slice(0, 11))}
                             placeholder="e.g. 12345678901"
                             maxLength={11}
                             inputMode="numeric"
-                            className="max-w-xs"
+                            className="max-w-xs w-full sm:flex-1"
                           />
                           <Button
                             onClick={handleUpdateNin}
                             disabled={isUpdatingNin || !/^\d{11}$/.test(ninValue)}
-                            className="whitespace-nowrap"
+                            className="whitespace-nowrap w-full sm:w-auto"
                           >
                             {isUpdatingNin ? 'Saving...' : 'Update'}
                           </Button>
@@ -631,16 +631,16 @@ const UpdatedInfoPage: React.FC = () => {
               </div>
 
               {/* Action Buttons */}
-              <div className="mt-8 flex justify-center space-x-4">
-                <Link href="/student/payment-history">
-                  <Button variant="outline">
+              <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
+                <Link href="/student/payment-history" className="w-full sm:w-auto">
+                  <Button variant="outline" className="w-full sm:w-auto">
                     <CreditCard className="mr-2 h-4 w-4" />
                     View Payment History
                   </Button>
                 </Link>
                 {!Boolean(studentInfo?.is_paid) && (
-                  <Link href="/student/payment">
-                    <Button>
+                  <Link href="/student/payment" className="w-full sm:w-auto">
+                    <Button className="w-full sm:w-auto">
                       <CreditCard className="mr-2 h-4 w-4" />
                       Complete Payment
                     </Button>
