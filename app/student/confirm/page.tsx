@@ -487,7 +487,7 @@ const DataConfirmationPage: React.FC = () => {
                         />
                       </div>
                       <div>
-                        <Label htmlFor="jamb_no">JAMB Number</Label>
+                        <Label htmlFor="jamb_no">JAMB Reg Number</Label>
                         <Input
                           id="jamb_no"
                           value={formData.jamb_no || ''}
