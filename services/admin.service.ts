@@ -861,8 +861,8 @@ class AdminService {
     return response.data;
   }
 
-  async comparePreparedList(filename: string, sessionId?: string) {
-    const params: Record<string, string> = { file: filename, session_id: sessionId ?? '' };
+  async comparePreparedList(filename: string, sessionId?: string, extraParams?: Record<string, string>) {
+    const params: Record<string, string> = { file: filename, session_id: sessionId ?? '', ...(extraParams ?? {}) };
     const response = await axiosInstance.get('/api/nysc/admin/prepared-lists/compare', {
       params,
       timeout: 120000,
@@ -870,8 +870,8 @@ class AdminService {
     return response.data;
   }
 
-  async exportPreparedList(kind: 'prepared' | 'not-prepared' | 'changed', filename: string, sessionId?: string): Promise<Blob> {
-    const params: Record<string, string> = { file: filename, session_id: sessionId ?? '' };
+  async exportPreparedList(kind: 'prepared' | 'not-prepared' | 'changed', filename: string, sessionId?: string, extraParams?: Record<string, string>): Promise<Blob> {
+    const params: Record<string, string> = { file: filename, session_id: sessionId ?? '', ...(extraParams ?? {}) };
     const response = await axiosInstance.get(`/api/nysc/admin/prepared-lists/export/${kind}`, {
       params,
       responseType: 'blob',

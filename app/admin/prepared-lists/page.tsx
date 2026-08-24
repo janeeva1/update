@@ -49,6 +49,8 @@ interface CompareStats {
 interface ChangedStudent {
   matric_no: string;
   full_name: string;
+  session_id?: number | string;
+  updated_at?: string;
   changes: Record<string, { old: string; new: string }>;
 }
 
@@ -90,6 +92,8 @@ const PreparedListsPage = () => {
   const [changedPreview, setChangedPreview] = useState<ChangedStudent[]>([]);
   const [sessions, setSessions] = useState<SessionOption[]>([]);
   const [sessionId, setSessionId] = useState('');
+  const [updatedFrom, setUpdatedFrom] = useState('');
+  const [updatedTo, setUpdatedTo] = useState('');
 
   // Auth guard
   useEffect(() => {
@@ -138,6 +142,11 @@ const PreparedListsPage = () => {
     if (id) localStorage.setItem('admin_selected_session_id', id);
   };
 
+  const dateWindowParams = (): Record<string, string> => ({
+    ...(updatedFrom ? { updated_from: updatedFrom } : {}),
+    ...(updatedTo ? { updated_to: updatedTo } : {}),
+  });
+
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -180,7 +189,7 @@ const PreparedListsPage = () => {
     }
     setIsComparing(true);
     try {
-      const res = await adminService.comparePreparedList(selectedFile, sessionId);
+      const res = await adminService.comparePreparedList(selectedFile, sessionId, dateWindowParams());
       setStats(res.stats);
       setNotPreparedPreview(res.not_prepared_preview || []);
       setMissingPreview(res.missing_on_portal_preview || []);
@@ -199,7 +208,7 @@ const PreparedListsPage = () => {
       return;
     }
     try {
-      const blob = await adminService.exportPreparedList(kind, selectedFile, sessionId);
+      const blob = await adminService.exportPreparedList(kind, selectedFile, sessionId, dateWindowParams());
       saveAs(blob, `${kind}_${new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-')}.csv`);
       toast.success('Download started');
     } catch (err: any) {
@@ -235,16 +244,16 @@ const PreparedListsPage = () => {
                 </p>
               </div>
 
-              {/* Session selector */}
+              {/* Session + updated-at window selector */}
               <Card>
                 <CardContent className="pt-6">
-                  <div className="flex flex-col sm:flex-row sm:items-end gap-3">
-                    <div className="flex-1">
-                      <label className="text-sm font-medium text-muted-foreground">Compare against session</label>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_1fr_auto] gap-3 sm:items-end">
+                    <div>
+                      <label className="text-sm font-medium text-muted-foreground">Session</label>
                       <select
                         value={sessionId}
                         onChange={(e) => persistSession(e.target.value)}
-                        className="mt-1 w-full sm:w-auto min-w-[200px] bg-white border border-gray-300 rounded-lg text-sm px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500 text-gray-700 shadow-sm"
+                        className="mt-1 w-full bg-white border border-gray-300 rounded-lg text-sm px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500 text-gray-700 shadow-sm"
                       >
                         <option value="">All Sessions</option>
                         {sessions.map((s) => (
@@ -252,11 +261,33 @@ const PreparedListsPage = () => {
                         ))}
                       </select>
                     </div>
-                    <Button onClick={handleCompare} disabled={isComparing || !selectedFile} className="w-full sm:w-auto">
+                    <div>
+                      <label className="text-sm font-medium text-muted-foreground">Updated from</label>
+                      <input
+                        type="date"
+                        value={updatedFrom}
+                        onChange={(e) => setUpdatedFrom(e.target.value)}
+                        className="mt-1 w-full bg-white border border-gray-300 rounded-lg text-sm px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500 text-gray-700 shadow-sm"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-muted-foreground">Updated to</label>
+                      <input
+                        type="date"
+                        value={updatedTo}
+                        onChange={(e) => setUpdatedTo(e.target.value)}
+                        className="mt-1 w-full bg-white border border-gray-300 rounded-lg text-sm px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500 text-gray-700 shadow-sm"
+                      />
+                    </div>
+                    <Button onClick={handleCompare} disabled={isComparing || !selectedFile} className="w-full lg:w-auto">
                       {isComparing ? <RefreshCw className="mr-2 h-4 w-4 animate-spin" /> : <Scale className="mr-2 h-4 w-4" />}
                       {isComparing ? 'Comparing...' : 'Run Comparison'}
                     </Button>
                   </div>
+                  <p className="text-xs text-muted-foreground mt-2">
+                    Tip: pick “All Sessions” plus an updated-from date to catch every student who edited their
+                    details since then — even if their record now sits in a different session.
+                  </p>
                 </CardContent>
               </Card>
 
@@ -510,6 +541,9 @@ const PreparedListsPage = () => {
                             {changedPreview.map((r, i) => (
                               <li key={i}>
                                 <Badge variant="outline" className="mr-2">{r.matric_no}</Badge>
+                                {r.updated_at && (
+                                  <span className="text-xs text-indigo-500 mr-2">({r.updated_at})</span>
+                                )}
                                 {Object.entries(r.changes).map(([field, change]) => (
                                   <span key={field} className="mr-3 whitespace-nowrap">
                                     <span className="text-xs font-medium">{CHANGE_FIELD_LABELS[field] ?? field}:</span>{' '}
