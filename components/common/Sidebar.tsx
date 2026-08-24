@@ -28,6 +28,7 @@ import {
   UserCheck,
   Download,
   AlertTriangle,
+  Scale,
   Clock
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
@@ -151,6 +152,11 @@ const adminNavItems: NavItem[] = [
     title: 'CSV Export',
     href: '/admin/csv-export',
     icon: Download,
+  },
+  {
+    title: 'Prepared Lists',
+    href: '/admin/prepared-lists',
+    icon: Scale,
   },
   {
     title: 'NULL Degree Export',

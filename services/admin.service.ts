@@ -839,6 +839,46 @@ class AdminService {
     const response = await axiosInstance.get('/api/nysc/admin/nerd-students', { params });
     return response.data;
   }
+
+  // Prepared Lists (storage-only reconciliation against student_nysc)
+  async getPreparedLists() {
+    const response = await axiosInstance.get('/api/nysc/admin/prepared-lists');
+    return response.data;
+  }
+
+  async uploadPreparedList(file: File) {
+    const formData = new FormData();
+    formData.append('file', file);
+    const response = await axiosInstance.post('/api/nysc/admin/prepared-lists/upload', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+      timeout: 120000,
+    });
+    return response.data;
+  }
+
+  async deletePreparedList(filename: string) {
+    const response = await axiosInstance.delete(`/api/nysc/admin/prepared-lists/${encodeURIComponent(filename)}`);
+    return response.data;
+  }
+
+  async comparePreparedList(filename: string, sessionId?: string) {
+    const params: Record<string, string> = { file: filename, session_id: sessionId ?? '' };
+    const response = await axiosInstance.get('/api/nysc/admin/prepared-lists/compare', {
+      params,
+      timeout: 120000,
+    });
+    return response.data;
+  }
+
+  async exportPreparedList(kind: 'prepared' | 'not-prepared' | 'changed', filename: string, sessionId?: string): Promise<Blob> {
+    const params: Record<string, string> = { file: filename, session_id: sessionId ?? '' };
+    const response = await axiosInstance.get(`/api/nysc/admin/prepared-lists/export/${kind}`, {
+      params,
+      responseType: 'blob',
+      timeout: 120000,
+    });
+    return response.data;
+  }
 }
 
 const adminService = new AdminService();
