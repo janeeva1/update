@@ -71,8 +71,12 @@ const StudentDashboard: React.FC = () => {
       // Set analytics data
         setAnalytics(analyticsData);
         
-        // Show deadline modal if data is not confirmed and system status is available
-        if (systemStatusData && !data?.isDataConfirmed) {
+        // Show the deadline prompt ONLY to students who have never
+        // submitted before: no confirmed flag AND no prior submission
+        // token on their NYSC record (token is issued on final submit,
+        // so returning/revalidation students are never nagged again).
+        const hasSubmittedBefore = !!data?.isDataConfirmed || !!data?.nysc_data?.submission_token;
+        if (systemStatusData && !hasSubmittedBefore) {
           setShowDeadlineModal(true);
         }
       } catch (error) {

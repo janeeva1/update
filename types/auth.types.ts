@@ -50,6 +50,7 @@ export interface StudentNysc {
   is_submitted?: boolean;
   payment_reference?: string;
   payment_date?: string;
+  submission_token?: string;
   fname?: string;
   lname?: string;
   mname?: string;

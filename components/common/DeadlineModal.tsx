@@ -63,9 +63,9 @@ const DeadlineModal: React.FC<DeadlineModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md md:max-w-lg">
+      <DialogContent className="w-[calc(100vw-1.5rem)] max-w-[calc(100vw-1.5rem)] sm:w-full sm:max-w-md md:max-w-lg max-h-[85vh] overflow-y-auto rounded-xl p-4 sm:p-6">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
+          <DialogTitle className="flex items-center gap-2 text-base sm:text-lg">
             {isLate ? (
               <AlertTriangle className="h-5 w-5 text-red-600" />
             ) : isDataConfirmed ? (
@@ -94,19 +94,19 @@ const DeadlineModal: React.FC<DeadlineModalProps> = ({
                   </p>
                 </div>
                 
-                <div className="bg-muted p-4 rounded-lg space-y-2">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm font-medium">Deadline:</span>
-                    <span className="text-sm">{formatDeadline(deadline)}</span>
+                <div className="bg-muted p-3 sm:p-4 rounded-lg space-y-2">
+                  <div className="flex justify-between items-center gap-2">
+                    <span className="text-sm font-medium shrink-0">Deadline:</span>
+                    <span className="text-xs sm:text-sm text-right">{formatDeadline(deadline)}</span>
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm font-medium">Time Remaining:</span>
+                  <div className="flex justify-between items-center gap-2">
+                    <span className="text-sm font-medium shrink-0">Time Remaining:</span>
                     <Badge variant={isLate ? 'destructive' : 'default'} className="text-xs">
                       {getTimeRemaining()}
                     </Badge>
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm font-medium">Current Fee:</span>
+                  <div className="flex justify-between items-center gap-2">
+                    <span className="text-sm font-medium shrink-0">Current Fee:</span>
                     <span className="text-sm font-bold">{formatCurrency(currentFee)}</span>
                   </div>
                 </div>
@@ -133,8 +133,8 @@ const DeadlineModal: React.FC<DeadlineModalProps> = ({
             {isDataConfirmed ? 'Close' : 'Already Confirmed'}
           </Button>
           {!isDataConfirmed && (
-            <Link href="/student/confirm" className="w-full sm:w-auto">
-              <Button className="w-full">
+            <Link href="/student/confirm" className="w-full sm:w-auto block">
+              <Button className="w-full sm:w-auto">
                 Confirm Data Now
               </Button>
             </Link>

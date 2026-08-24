@@ -341,12 +341,8 @@ export default function AdminDataPage() {
                         <h3 className="text-lg font-semibold text-gray-900">{s.fname} {s.lname}</h3>
                         <p className="text-sm text-gray-600">{s.matric_no}</p>
                       </div>
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                        s.is_status 
-                          ? 'bg-yellow-100 text-yellow-800' 
-                          : 'bg-blue-100 text-blue-800'
-                      }`}>
-                        {s.is_status ? 'Revalidation' : 'Fresh'}
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                        Fresh
                       </span>
                     </div>
                     
@@ -514,12 +510,8 @@ export default function AdminDataPage() {
                             {s.graduation_year}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm">
-                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                              s.is_status 
-                                ? 'bg-yellow-100 text-yellow-800' 
-                                : 'bg-blue-100 text-blue-800'
-                            }`}>
-                              {s.is_status ? 'Revalidation' : 'Fresh'}
+                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                              Fresh
                             </span>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 capitalize">
@@ -596,11 +588,7 @@ export default function AdminDataPage() {
                     <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 space-y-1 sm:space-y-0">
                       <div className="flex items-center space-x-2">
                         <div className="w-3 h-3 bg-blue-100 rounded-full"></div>
-                        <span>Fresh: {sorted.filter(s => !s.is_status).length}</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <div className="w-3 h-3 bg-yellow-100 rounded-full"></div>
-                        <span>Revalidation: {sorted.filter(s => s.is_status).length}</span>
+                        <span>Fresh: {sorted.length}</span>
                       </div>
                     </div>
                   </div>
