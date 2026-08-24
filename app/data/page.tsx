@@ -61,8 +61,10 @@ export default function AdminDataPage() {
   const isAdmin = isAuthenticated && userType === 'admin';
 
   const buildFilterParams = () => {
-    const params: Record<string, string> = {};
-    if (sessionId) params.session_id = sessionId;
+    const params: Record<string, string> = {
+      // Always send the key: '' means "All Sessions" on the backend.
+      session_id: sessionId,
+    };
     if (dateFrom) params.date_from = dateFrom;
     if (dateTo) params.date_to = dateTo;
     return params;
