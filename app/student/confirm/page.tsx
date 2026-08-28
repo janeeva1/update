@@ -46,6 +46,7 @@ const DataConfirmationPage: React.FC = () => {
   const [jambPreview, setJambPreview] = useState<{url: string, isPdf: boolean} | null>(null);
   const [existingDocs, setExistingDocs] = useState<{nin: {url: string, isPdf: boolean} | null, jamb: {url: string, isPdf: boolean} | null}>({nin: null, jamb: null});
   const [originalValues, setOriginalValues] = useState<any>(null);
+  const [jambTouched, setJambTouched] = useState(false);
 
   useEffect(() => {
     fetchStudentDetails();
@@ -200,9 +201,19 @@ const DataConfirmationPage: React.FC = () => {
       const docsReplaced = !!(ninSlip || jambLetter);
       const ninChanged = hasLoadedRecord && norm(formData.nin) !== norm(originalValues.nin);
 
-      // Free NIN-only update: submitted+paid students changing nothing but the NIN
-      // are updated instantly without a new payment cycle.
-      if (hasLoadedRecord && !otherFieldsChanged && !docsReplaced && ninChanged) {
+      // JAMB details are a paid change, never a free one. jambChanged is true
+      // whenever the student edited the JAMB number (tracked via jambTouched,
+      // since the loaded value can come from the SIS academic record and a
+      // byte-for-byte diff may miss the edit) or replaced the admission letter.
+      // This ensures a JAMB update is never mistaken for a free NIN-only update
+      // and never dropped by the "no changes detected" guard below.
+      const jambChanged = hasLoadedRecord &&
+        (jambTouched || norm(formData.jamb_no) !== norm(originalValues.jamb_no) || jambLetter);
+
+      // Free NIN-only update: submitted+paid students changing nothing but the
+      // NIN are updated instantly without a new payment cycle. The NIN is the
+      // ONLY field that may bypass payment — a JAMB change always requires one.
+      if (hasLoadedRecord && !otherFieldsChanged && !jambChanged && !docsReplaced && ninChanged) {
         const ninVal = norm(formData.nin);
         if (!/^\d{11}$/.test(ninVal)) {
           toast.error('NIN must be exactly 11 digits.');
@@ -221,7 +232,7 @@ const DataConfirmationPage: React.FC = () => {
         return;
       }
 
-      if (hasLoadedRecord && !otherFieldsChanged && !docsReplaced && !ninChanged) {
+      if (hasLoadedRecord && !otherFieldsChanged && !jambChanged && !docsReplaced && !ninChanged) {
         toast.info('No changes detected. Update your details or your NIN to proceed.');
         setIsSubmitting(false);
         return;
@@ -491,7 +502,10 @@ const DataConfirmationPage: React.FC = () => {
                         <Input
                           id="jamb_no"
                           value={formData.jamb_no || ''}
-                          onChange={(e) => handleInputChange('jamb_no', e.target.value)}
+                          onChange={(e) => {
+                            handleInputChange('jamb_no', e.target.value);
+                            setJambTouched(true);
+                          }}
                         />
                       </div>
                       <div>
