@@ -206,11 +206,12 @@ const GraduandsReviewPage = () => {
       return;
     }
 
-    const header = "Matric_No,Class_of_Degree";
+    const header = "Matric_No,Student_Name,Class_of_Degree";
     const rows = matchData.unmatched.map((record) => {
       const matric = `"${(record.docx_matric || "").replace(/"/g, '""')}"`;
+      const name = `"${(record.student_name || "").replace(/"/g, '""')}"`;
       const degree = `"${(record.class_of_degree || "").replace(/"/g, '""')}"`;
-      return `${matric},${degree}`;
+      return `${matric},${name},${degree}`;
     });
 
     const csv = [header, ...rows].join("\n");
