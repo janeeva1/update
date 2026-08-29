@@ -27,6 +27,7 @@ import {
   Users,
   Upload,
   Search,
+  Download,
 } from "lucide-react";
 import { toast } from "sonner";
 import { ReviewData, ImportSummary } from "@/types/docx-import.types";
@@ -197,6 +198,36 @@ const GraduandsReviewPage = () => {
     } finally {
       setIsProcessing(false);
     }
+  };
+
+  const downloadUnmatched = () => {
+    if (!matchData || matchData.unmatched.length === 0) {
+      toast.error("No unmatched records to download");
+      return;
+    }
+
+    const header = "Matric_No,Class_of_Degree";
+    const rows = matchData.unmatched.map((record) => {
+      const matric = `"${(record.docx_matric || "").replace(/"/g, '""')}"`;
+      const degree = `"${(record.class_of_degree || "").replace(/"/g, '""')}"`;
+      return `${matric},${degree}`;
+    });
+
+    const csv = [header, ...rows].join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+
+    const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, "-");
+    link.download = `unmatched_records_${selectedFile.replace(/\.[^.]+$/, "")}_${timestamp}.csv`;
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+
+    toast.success(`Downloaded ${matchData.unmatched.length} unmatched records`);
   };
 
   const handleApprovalChange = (matricNo: string, approved: boolean) => {
@@ -974,14 +1005,27 @@ const GraduandsReviewPage = () => {
                 {matchData.unmatched && matchData.unmatched.length > 0 && (
                   <Card>
                     <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <AlertCircle className="h-5 w-5 text-orange-600" />
-                        Unmatched Records ({matchData.summary.total_unmatched})
-                      </CardTitle>
-                      <CardDescription>
-                        Records from DOCX that could not be matched with
-                        database. Check for formatting differences.
-                      </CardDescription>
+                      <div className="flex items-start justify-between gap-4">
+                        <div>
+                          <CardTitle className="flex items-center gap-2">
+                            <AlertCircle className="h-5 w-5 text-orange-600" />
+                            Unmatched Records ({matchData.summary.total_unmatched})
+                          </CardTitle>
+                          <CardDescription>
+                            Records from DOCX that could not be matched with
+                            database. Check for formatting differences.
+                          </CardDescription>
+                        </div>
+                        <Button
+                          onClick={downloadUnmatched}
+                          variant="outline"
+                          size="sm"
+                          disabled={matchData.unmatched.length === 0}
+                        >
+                          <Download className="h-4 w-4 mr-2" />
+                          Download CSV
+                        </Button>
+                      </div>
                     </CardHeader>
                     <CardContent>
                       <div className="max-h-60 overflow-y-auto">
